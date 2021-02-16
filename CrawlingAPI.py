@@ -20,7 +20,7 @@ class MyTest(unittest.TestCase):
 
 
 
-def moreabangebbangyabbangya(queryName):
+def tradingInformation(queryName):
     html = requests.get(
         'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=' + queryName)
     soup = BeautifulSoup(html.text, 'html.parser')
