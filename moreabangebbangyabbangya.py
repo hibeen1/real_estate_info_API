@@ -3,6 +3,13 @@ import json
 import requests
 
 
+################ 버그 발생 가능성 ################
+# 1. next, previous_sibling, next_sibling 등의 함수를 너무 많이 사용함 -> 네이버에서 하나만 변경 되어도 전부를 바꿔야 함
+# 2. 예외 처리 남발
+# 3. 검색어 처리 미흡
+##############################################
+
+
 def moreabangebbangyabbangya(queryName):
     html = requests.get(
         'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=' + queryName)
@@ -11,23 +18,24 @@ def moreabangebbangyabbangya(queryName):
     #검색어를 잘 입력한 경우
     try:
         apartment_Information = dict()
-        thisApartment = dict()
-        #최근 매매 실거래 정보 parsing
-        res = soup.findAll('div', {'class': 'info_area'})[1]
-        recent_trading_price = res.find('span', {'class': 'item2'}).text
-        recent_trading_info = res.find(
-            'span', {'class': 'item2'}).next_sibling.next.text
-        #json에 저장
-        thisApartment["recent trade information"] = recent_trading_info + " " + \
-            recent_trading_price
-
+        this_Apartment = dict()
+        #최근 매매 실거래 정보 parsing (없을 수도 있음)
+        try:
+            recent_trading_temp = soup.findAll('div', {'class': 'info_area'})[1]
+            recent_trading_price = recent_trading_temp.find('span', {'class': 'item2'}).text
+            recent_trading_info = recent_trading_temp.find(
+                'span', {'class': 'item2'}).next_sibling.next.text
+            this_Apartment["recent trade information"] = recent_trading_info + " " + \
+                recent_trading_price
+        except:
+            this_Apartment["recent trade information"] = "None"
         acreage_num = soup.findAll('span', {'class': 'tab_inner'})
         info = soup.findAll('div', {'class': 'complex_content'})
         for i in range(0, len(acreage_num)):
             detail = dict()
             #해당 면적
             acreage = acreage_num[i].text
-            detail["해당 면적"] = acreage
+            detail["acreage"] = acreage
             #매물가격 1
             tem = info[i].findAll('div', {'class': 'detail'})[
                 1].find('li', {'class': 'item'})
@@ -45,16 +53,16 @@ def moreabangebbangyabbangya(queryName):
                 detail[subject_2] = price_of_subject_2
             except:
                 
-                detail[""] = "다른 매물이 없습니다"
+                detail[""] = "None"
             
             #매물 정보(없을 수도 있음)
             try:
                 tem2 = info[i].find('div', {'class': 'menu_area'}).text
-                detail["매물 수량"] = tem2
+                detail["Sales Info"] = tem2
             except:
-                detail["매물 수량"]: "정보가 없습니다"
-            thisApartment[acreage] = detail
-        apartment_Information[queryName] = thisApartment
+                detail["Sales Info"]: "None"
+            this_Apartment[acreage] = detail
+        apartment_Information[queryName] = this_Apartment
 
 
         with open('../test.json', 'w', encoding='UTF-8') as make_file:
@@ -70,5 +78,5 @@ def moreabangebbangyabbangya(queryName):
     except:
         print("알맞은 검색어를 입력하세요")
 
-moreabangebbangyabbangya("벽산비치타운")
+moreabangebbangyabbangya("형제오션뷰")
 
