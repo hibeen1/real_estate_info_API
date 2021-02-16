@@ -7,6 +7,8 @@ queryName에 검색을 원하는 부동산 매물을 넣으면 네이버에서 �
 
 #### example
 
+    import moreabangebbangyabbangya
+    
     moreabangebbangyabbangya("압구정현대아파트")
   
     
