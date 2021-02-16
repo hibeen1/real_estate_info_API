@@ -11,6 +11,15 @@ import unittest
 ##############################################
 
 
+def custom_function():
+    pass
+
+class MyTest(unittest.TestCase):
+    def test_runs(self):
+        custom_function()
+
+
+
 def moreabangebbangyabbangya(queryName):
     html = requests.get(
         'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=' + queryName)
@@ -81,5 +90,8 @@ def moreabangebbangyabbangya(queryName):
     except:
         print("알맞은 검색어를 입력하세요")
 
-moreabangebbangyabbangya("롯데몰송도캐슬파크")
+#moreabangebbangyabbangya("롯데몰송도캐슬파크")
+
+if __name__ == '__main__':  
+    unittest.main()
 
