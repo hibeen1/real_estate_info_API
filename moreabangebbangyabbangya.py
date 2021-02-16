@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import json
 import requests
+import unittest
 
 
 ################ 버그 발생 가능성 ################
@@ -36,13 +37,16 @@ def moreabangebbangyabbangya(queryName):
             #해당 면적
             acreage = acreage_num[i].text
             detail["acreage"] = acreage
-            #매물가격 1
-            tem = info[i].findAll('div', {'class': 'detail'})[
-                1].find('li', {'class': 'item'})
-            subject_1 = tem.find(
-                'strong', {'class': 'price'}).previous_sibling
-            price_of_subject_1 = tem.find('strong', {'class': 'price'}).text
-            detail[subject_1] = price_of_subject_1
+            try:
+                #매물가격 1 (없을 수도 있음)
+                tem = info[i].findAll('div', {'class': 'detail'})[
+                    1].find('li', {'class': 'item'})
+                subject_1 = tem.find(
+                    'strong', {'class': 'price'}).previous_sibling
+                price_of_subject_1 = tem.find('strong', {'class': 'price'}).text
+                detail[subject_1] = price_of_subject_1
+            except:
+                detail[""] = "None"
 
             try:
                 #매물가격 2 (없을 수도 있음)
@@ -52,7 +56,6 @@ def moreabangebbangyabbangya(queryName):
                 price_of_subject_2 = c1.find('strong', {'class': 'price'}).text
                 detail[subject_2] = price_of_subject_2
             except:
-                
                 detail[""] = "None"
             
             #매물 정보(없을 수도 있음)
@@ -78,5 +81,5 @@ def moreabangebbangyabbangya(queryName):
     except:
         print("알맞은 검색어를 입력하세요")
 
-moreabangebbangyabbangya("형제오션뷰")
+moreabangebbangyabbangya("롯데몰송도캐슬파크")
 
